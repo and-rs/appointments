@@ -7,6 +7,7 @@ import * as ec2 from "aws-cdk-lib/aws-ec2";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as rds from "aws-cdk-lib/aws-rds";
 import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
+import path from "path";
 
 export class AppointmentsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -25,7 +26,7 @@ export class AppointmentsStack extends cdk.Stack {
     });
 
     const dbSecret = new secretsmanager.Secret(this, "DBSecret", {
-      secretName: "rds-postgres-credentials",
+      secretName: "appointments-rds-credentials",
       generateSecretString: {
         secretStringTemplate: JSON.stringify({ username: DB_USERNAME }),
         generateStringKey: "password",
@@ -66,9 +67,11 @@ export class AppointmentsStack extends cdk.Stack {
     const fn = new NodejsFunction(this, "lambda-", {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: "handler",
-      entry: "src/handler.ts",
+      entry: path.join(__dirname, "../src/handler.ts"),
       timeout: cdk.Duration.seconds(60),
       bundling: {
+        minify: true,
+        sourceMap: true,
         commandHooks: {
           beforeBundling() {
             return [];
