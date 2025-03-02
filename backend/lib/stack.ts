@@ -1,3 +1,4 @@
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Construct } from "constructs";
 
@@ -143,9 +144,12 @@ export class AppointmentsStack extends cdk.Stack {
       {
         onCreate: triggers,
         onUpdate: triggers,
-        policy: customresources.AwsCustomResourcePolicy.fromSdkCalls({
-          resources: customresources.AwsCustomResourcePolicy.ANY_RESOURCE,
-        }),
+        policy: customresources.AwsCustomResourcePolicy.fromStatements([
+          new PolicyStatement({
+            actions: ["lambda:InvokeFunction"],
+            resources: [migrationFn.functionArn],
+          }),
+        ]),
       },
     );
     dbSecret.grantRead(migrationFn);
