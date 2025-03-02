@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17
-    container_name: dev-postgres
+    container_name: appointments-postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password

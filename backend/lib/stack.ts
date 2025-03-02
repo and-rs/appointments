@@ -13,7 +13,7 @@ export class AppointmentsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const DB_USERNAME = "postgres";
-    const DB_NAME = "balances";
+    const DB_NAME = "appointments";
 
     const vpc = new ec2.Vpc(this, "vpc-", {
       maxAzs: 2,

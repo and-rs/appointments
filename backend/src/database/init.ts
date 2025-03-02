@@ -2,32 +2,62 @@ import "dotenv/config";
 import { Client } from "pg";
 import { getDatabaseConfig } from "./config";
 
-let db: Client | null = null;
+class Database {
+  private static instance: Client | null = null;
+  private static isConnecting = false;
 
-async function initializeDatabase() {
-  if (!db) {
-    const { url, ssl } = await getDatabaseConfig();
+  private constructor() {}
+
+  static async getInstance(): Promise<Client> {
+    if (this.instance !== null) {
+      return this.instance;
+    }
+
+    if (this.isConnecting) {
+      return new Promise((resolve) => {
+        const checkConnection = setInterval(() => {
+          if (this.instance !== null) {
+            clearInterval(checkConnection);
+            resolve(this.instance);
+          }
+        }, 100);
+      });
+    }
+
+    this.isConnecting = true;
 
     try {
-      db = new Client({
+      const { url, ssl } = await getDatabaseConfig();
+
+      this.instance = new Client({
         connectionString: url,
         ssl,
       });
-      console.log("DATABASE IS SET UP");
+
+      await this.instance.connect();
+      console.log("DB CONNECTED");
+
+      this.instance.on("error", (error) => {
+        console.error("DB CONNECTION ERROR", error);
+        this.instance = null;
+        this.isConnecting = false;
+      });
+
+      return this.instance;
     } catch (error) {
-      db = null;
-      console.error("ERROR INITIALIZING DATABASE ->", error);
+      this.instance = null;
+      console.error("DB INIT ERRROR", error);
       throw error;
+    } finally {
+      this.isConnecting = false;
     }
   }
-  return db;
-}
 
-async function getDatabase(): Promise<Client> {
-  if (!db) {
-    return initializeDatabase();
+  static async query<T = any>(sql: string, params?: any[]): Promise<T[]> {
+    const client = await this.getInstance();
+    const result = await client.query(sql, params);
+    return result.rows;
   }
-  return db;
 }
 
-export { getDatabase };
+export default Database;

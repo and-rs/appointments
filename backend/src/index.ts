@@ -1,11 +1,21 @@
 import "dotenv/config";
 import express, { Application, Request, Response } from "express";
+import Database from "./database/init";
 import userRouter from "./routes/users";
 
 const app: Application = express();
 
-app.get("/", (_req, res) => {
-  res.send("Hello World!");
+app.get("/", async (_req, res) => {
+  const result = await Database.query("SELECT version()");
+  res.json({ test: result[0].version });
+});
+
+app.use(async (_req, res, next) => {
+  res.on("finish", async () => {
+    const db = await Database.getInstance();
+    await db.end();
+  });
+  next();
 });
 
 app.use("/users", userRouter);
