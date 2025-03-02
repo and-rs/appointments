@@ -5,6 +5,7 @@
     "backend": "bin/stack.ts"
   },
   "scripts": {
+    "db:migrate": "tsx migrations/handler.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "watch": "tsc -w",
