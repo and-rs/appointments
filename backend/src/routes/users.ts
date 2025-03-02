@@ -1,8 +1,9 @@
 import { Router } from "express";
-import createUser from "../handlers/users";
+import { createUsers, readUsers } from "../handlers/users";
 
 const userRouter: Router = Router();
 
-userRouter.get("/post", createUser);
+userRouter.get("/read", readUsers);
+userRouter.post("/create", createUsers);
 
 export default userRouter;

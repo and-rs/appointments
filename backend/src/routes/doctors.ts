@@ -3,6 +3,6 @@ import getDoctors from "../handlers/doctors";
 
 const doctorsRouter: Router = Router();
 
-doctorsRouter.get("/get", getDoctors);
+doctorsRouter.get("/read", getDoctors);
 
 export default doctorsRouter;

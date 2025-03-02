@@ -41,6 +41,4 @@ export const handler = async () => {
   }
 };
 
-if (process.env.NODE_ENV === "dev") {
-  handler();
-}
+handler();
