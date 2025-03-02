@@ -14,7 +14,7 @@ export default class HandlerFactory {
         res.status(successStatus).json(result);
         console.log(`Success => ${req.method} ${req.baseUrl}${req.path}`);
       } catch (error) {
-        console.error(`${errorMessage} => `, error);
+        console.error(`${errorMessage} =>`, error);
         res.status(500).json({ error: errorMessage });
       }
     };
