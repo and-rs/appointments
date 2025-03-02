@@ -6,17 +6,11 @@ import userRouter from "./routes/users";
 
 const app: Application = express();
 
+app.use(express.json());
+
 app.get("/", async (_req, res) => {
   const result = await Database.query("SELECT version()");
   res.json({ test: result[0].version });
-});
-
-app.use(async (_req, res, next) => {
-  res.on("finish", async () => {
-    const db = await Database.getInstance();
-    await db.end();
-  });
-  next();
 });
 
 app.use("/users", userRouter);
