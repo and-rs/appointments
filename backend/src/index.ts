@@ -1,8 +1,9 @@
-import "dotenv/config";
-import express, { Application, Request, Response } from "express";
 import Database from "@/database/init";
+import appointmentsRouter from "@/routes/appointments";
 import doctorsRouter from "@/routes/doctors";
 import userRouter from "@/routes/users";
+import "dotenv/config";
+import express, { Application, Request, Response } from "express";
 
 const app: Application = express();
 
@@ -15,6 +16,7 @@ app.get("/", async (_req, res) => {
 
 app.use("/users", userRouter);
 app.use("/doctors", doctorsRouter);
+app.use("/appointments", appointmentsRouter);
 
 app.use((err: Error, _req: Request, res: Response) => {
   console.error(err);

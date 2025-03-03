@@ -1,5 +1,5 @@
 export interface User {
-  id: string; // UUID
+  id: string;
   email: string;
   password: string;
   name: string;
@@ -7,17 +7,23 @@ export interface User {
 }
 
 export interface Doctor {
-  id: string; // UUID
+  id: string;
   name: string;
   specialty: string;
   created_at: string;
 }
 
 export interface Appointment {
-  id: string; // UUID
-  user_id: string; // UUID (references User)
-  doctor_id: string; // UUID (references Doctor)
-  date: string; // DATE (ISO 8601 date string, e.g., '2025-03-02')
-  time: string; // TIME (Time string, e.g., '14:30:00')
-  created_at: string; // TIMESTAMPTZ (ISO 8601 date-time string)
+  id: string;
+  user_id: string;
+  doctor_id: string;
+  date: string;
+  time: string;
+  created_at: string;
 }
+
+// types for later on:
+// ids = uuid
+// DATE (ISO 8601 '2025-03-02')
+// TIME (Time string '14:30:00')
+// TIMESTAMPTZ (ISO 8601) for created_at

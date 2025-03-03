@@ -1,12 +1,14 @@
 import Database from "@/database/init";
+import { AuthenticatedRequest } from "@/middleware/auth";
 import HandlerFactory from "@/utils/handler";
 import { RequestHandler } from "express";
 
-export const deleteUser: RequestHandler = HandlerFactory.create<{
-  message: string;
-}>(
+export const deleteUser: RequestHandler = HandlerFactory.create<
+  { message: string },
+  AuthenticatedRequest
+>(
   async (req, _res) => {
-    const id = req.body?.id;
+    const id = req.user?.id;
 
     if (!id) {
       throw new Error("No id provided");
