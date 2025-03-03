@@ -1,9 +1,9 @@
 import bcrypt from "bcryptjs";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import Database from "../database/init";
-import { User } from "../types";
-import HandlerFactory from "../utils/handler";
+import Database from "../../database/init";
+import { User } from "../../types";
+import HandlerFactory from "../../utils/handler";
 
 export const login: RequestHandler = HandlerFactory.create<{ token: string }>(
   async (req) => {
@@ -36,5 +36,5 @@ export const login: RequestHandler = HandlerFactory.create<{ token: string }>(
 
     return { token };
   },
-  "Login failed",
+  { errorMessage: "Login failed" },
 );
