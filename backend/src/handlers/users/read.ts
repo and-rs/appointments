@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
-import Database from "../../database/init";
-import { User } from "../../types";
-import HandlerFactory from "../../utils/handler";
+import Database from "@/database/init";
+import { User } from "@/types";
+import HandlerFactory from "@/utils/handler";
 
 export const readUsers: RequestHandler = HandlerFactory.create<{
   users: User[];
@@ -10,5 +10,5 @@ export const readUsers: RequestHandler = HandlerFactory.create<{
     const users = await Database.query<User>("SELECT * FROM users");
     return { users };
   },
-  { errorMessage: "Failed to fetch users" },
+  { errorName: "Failed to fetch users" },
 );

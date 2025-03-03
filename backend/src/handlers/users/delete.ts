@@ -1,6 +1,6 @@
+import Database from "@/database/init";
+import HandlerFactory from "@/utils/handler";
 import { RequestHandler } from "express";
-import Database from "../../database/init";
-import HandlerFactory from "../../utils/handler";
 
 export const deleteUser: RequestHandler = HandlerFactory.create<{
   message: string;
@@ -25,5 +25,5 @@ export const deleteUser: RequestHandler = HandlerFactory.create<{
 
     return { message: "User deleted successfully" };
   },
-  { errorMessage: "Failed to delete user" },
+  { errorName: "Failed to delete user" },
 );

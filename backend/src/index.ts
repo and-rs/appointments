@@ -1,8 +1,8 @@
 import "dotenv/config";
 import express, { Application, Request, Response } from "express";
-import Database from "./database/init";
-import doctorsRouter from "./routes/doctors";
-import userRouter from "./routes/users";
+import Database from "@/database/init";
+import doctorsRouter from "@/routes/doctors";
+import userRouter from "@/routes/users";
 
 const app: Application = express();
 

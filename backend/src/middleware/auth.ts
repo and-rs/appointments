@@ -1,6 +1,6 @@
 import { Request, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import HandlerFactory from "../utils/handler";
+import HandlerFactory from "@/utils/handler";
 
 export interface AuthenticatedRequest extends Request {
   user: {
@@ -31,5 +31,5 @@ export const authenticate: RequestHandler = HandlerFactory.create(
 
     next();
   },
-  { errorStatus: 401, errorMessage: "Failed authentication" },
+  { errorStatus: 401, errorName: "Failed authentication" },
 );

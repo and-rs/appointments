@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Database from "../database/init";
+import Database from "@/database/init";
 
 export default async function getDoctors(_req: Request, res: Response) {
   try {

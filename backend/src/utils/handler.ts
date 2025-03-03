@@ -1,7 +1,7 @@
-import { Request, Response, RequestHandler, NextFunction } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
-type HandlerOperation<T> = (
-  req: Request,
+type HandlerOperation<T, R extends Request = Request> = (
+  req: R,
   res: Response,
   next: NextFunction,
 ) => Promise<T>;
@@ -9,24 +9,29 @@ type HandlerOperation<T> = (
 type HandlerProps = {
   successStatus?: number;
   errorStatus?: number;
-  errorMessage: string;
+  errorName: string;
 };
 
 export default class HandlerFactory {
-  static create<T>(
-    operation: HandlerOperation<T>,
-    { successStatus = 200, errorStatus = 500, errorMessage }: HandlerProps,
+  static create<T, R extends Request = Request>(
+    operation: HandlerOperation<T, R>,
+    { successStatus = 200, errorStatus = 500, errorName }: HandlerProps,
   ): RequestHandler {
-    return async (req, res, next) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const result = await operation(req, res, next);
+        const result = await operation(req as R, res, next);
+
         if (result) {
           res.status(successStatus).json(result);
         }
+
         console.log(`Success => ${req.method} ${req.baseUrl}${req.path}`);
       } catch (error) {
-        console.error(`${errorMessage} =>`, error);
-        res.status(errorStatus).json({ error: errorMessage });
+        const { message } = error as Error;
+
+        console.error(`${errorName} =>`, error);
+
+        res.status(errorStatus).json({ error: errorName, message });
       }
     };
   }

@@ -1,13 +1,15 @@
 import { RequestHandler } from "express";
-import Database from "../../database/init";
-import { User } from "../../types";
-import HandlerFactory from "../../utils/handler";
+import Database from "@/database/init";
+import { AuthenticatedRequest } from "@/middleware/auth";
+import { User } from "@/types";
+import HandlerFactory from "@/utils/handler";
 
-export const updateUser: RequestHandler = HandlerFactory.create<{
-  user: User;
-}>(
+export const updateUser: RequestHandler = HandlerFactory.create<
+  { user: User },
+  AuthenticatedRequest
+>(
   async (req, _res) => {
-    const id = req.body?.id;
+    const id = req.user?.id;
     const name = req.body?.name;
     const email = req.body?.email;
 
@@ -32,5 +34,5 @@ export const updateUser: RequestHandler = HandlerFactory.create<{
 
     return { user };
   },
-  { errorMessage: "Failed to update user" },
+  { errorName: "Failed to update user" },
 );

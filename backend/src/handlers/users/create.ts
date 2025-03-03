@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { RequestHandler } from "express";
-import Database from "../../database/init";
-import { User } from "../../types";
-import HandlerFactory from "../../utils/handler";
+import Database from "@/database/init";
+import HandlerFactory from "@/utils/handler";
+import { User } from "@/types";
 
 export const createUsers: RequestHandler = HandlerFactory.create<{
   user: User;
@@ -40,5 +40,5 @@ export const createUsers: RequestHandler = HandlerFactory.create<{
 
     return { user };
   },
-  { errorMessage: "Failed to create user", successStatus: 201 },
+  { errorName: "Failed to create user", successStatus: 201 },
 );

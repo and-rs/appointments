@@ -1,5 +1,5 @@
 import { Router } from "express";
-import getDoctors from "../handlers/doctors";
+import getDoctors from "@/handlers/doctors";
 
 const doctorsRouter: Router = Router();
 
