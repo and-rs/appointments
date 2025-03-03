@@ -49,7 +49,10 @@ export default function Nav() {
         })}
 
         <Button
-          onClick={() => navigate.push("/")}
+          onClick={() => {
+            navigate.push("/");
+            localStorage.removeItem("token");
+          }}
           variant={"ghost"}
           size={"sm"}
           className="self-center p-2 text-xs rounded-md transition-colors sm:text-sm"

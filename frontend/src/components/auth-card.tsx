@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Login from "./login";
-import SignIn from "./signin";
+import Signup from "./signup";
 
 export default function AuthCard() {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
@@ -65,7 +65,7 @@ export default function AuthCard() {
                 : "opacity-0 z-0 hidden"
             }`}
           >
-            <SignIn />
+            <Signup />
           </div>
         </div>
       </CardContent>

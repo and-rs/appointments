@@ -21,3 +21,12 @@ export interface Appointment {
   time: string;
   created_at?: string;
 }
+
+export interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}

@@ -8,10 +8,6 @@ interface Props {
 }
 
 export default function AppointmentsList({ appointments }: Props) {
-  appointments.map((appointment) => {
-    console.log(appointment.doctor_id);
-  });
-
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
