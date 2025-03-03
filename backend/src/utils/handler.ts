@@ -1,21 +1,32 @@
-import { Request, Response, RequestHandler } from "express";
+import { Request, Response, RequestHandler, NextFunction } from "express";
 
-type HandlerOperation<T> = (req: Request, res: Response) => Promise<T>;
+type HandlerOperation<T> = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => Promise<T>;
+
+type HandlerProps = {
+  successStatus?: number;
+  errorStatus?: number;
+  errorMessage: string;
+};
 
 export default class HandlerFactory {
   static create<T>(
     operation: HandlerOperation<T>,
-    errorMessage: string,
-    successStatus: number = 200,
+    { successStatus = 200, errorStatus = 500, errorMessage }: HandlerProps,
   ): RequestHandler {
-    return async (req: Request, res: Response) => {
+    return async (req, res, next) => {
       try {
-        const result = await operation(req, res);
-        res.status(successStatus).json(result);
+        const result = await operation(req, res, next);
+        if (result) {
+          res.status(successStatus).json(result);
+        }
         console.log(`Success => ${req.method} ${req.baseUrl}${req.path}`);
       } catch (error) {
         console.error(`${errorMessage} =>`, error);
-        res.status(500).json({ error: errorMessage });
+        res.status(errorStatus).json({ error: errorMessage });
       }
     };
   }

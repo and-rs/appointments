@@ -40,65 +40,73 @@ export const createUsers: RequestHandler = HandlerFactory.create<{
 
     return { user };
   },
-  "Failed to create user",
-  201,
+  { errorMessage: "Failed to create user", successStatus: 201 },
 );
 
 export const readUsers: RequestHandler = HandlerFactory.create<{
   users: User[];
-}>(async () => {
-  const users = await Database.query<User>("SELECT * FROM users");
-  return { users };
-}, "Failed to fetch users");
+}>(
+  async () => {
+    const users = await Database.query<User>("SELECT * FROM users");
+    return { users };
+  },
+  { errorMessage: "Failed to fetch users" },
+);
 
 export const updateUser: RequestHandler = HandlerFactory.create<{
   user: User;
-}>(async (req, _res) => {
-  const id = req.body?.id;
-  const name = req.body?.name;
-  const email = req.body?.email;
+}>(
+  async (req, _res) => {
+    const id = req.body?.id;
+    const name = req.body?.name;
+    const email = req.body?.email;
 
-  if (!id) {
-    throw new Error("No id provided");
-  }
+    if (!id) {
+      throw new Error("No id provided");
+    }
 
-  const result = await Database.query<User>(
-    `UPDATE users
+    const result = await Database.query<User>(
+      `UPDATE users
      SET 
       email = COALESCE($1, email), 
       name = COALESCE($2, name)
      WHERE id = $3
      RETURNING id, email, name`,
-    [email, name, id],
-  );
+      [email, name, id],
+    );
 
-  const user = result[0];
-  if (!user) {
-    throw new Error("User not found or update failed");
-  }
+    const user = result[0];
+    if (!user) {
+      throw new Error("User not found or update failed");
+    }
 
-  return { user };
-}, "Failed to update user");
+    return { user };
+  },
+  { errorMessage: "Failed to update user" },
+);
 
 export const deleteUser: RequestHandler = HandlerFactory.create<{
   message: string;
-}>(async (req, _res) => {
-  const id = req.body?.id;
+}>(
+  async (req, _res) => {
+    const id = req.body?.id;
 
-  if (!id) {
-    throw new Error("No id provided");
-  }
+    if (!id) {
+      throw new Error("No id provided");
+    }
 
-  const result = await Database.query(
-    `DELETE FROM users 
+    const result = await Database.query(
+      `DELETE FROM users 
      WHERE id = $1 
      RETURNING id`,
-    [id],
-  );
+      [id],
+    );
 
-  if (!result[0]) {
-    throw new Error("User not found");
-  }
+    if (!result[0]) {
+      throw new Error("User not found");
+    }
 
-  return { message: "User deleted successfully" };
-}, "Failed to delete user");
+    return { message: "User deleted successfully" };
+  },
+  { errorMessage: "Failed to delete user" },
+);
