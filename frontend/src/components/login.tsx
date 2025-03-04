@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { api } from "@/lib/axios";
 import { AuthResponse } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -16,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { api } from "@/lib/axios";
 
 const formSchema = z.object({
   email: z
@@ -29,6 +30,7 @@ const formSchema = z.object({
 
 export default function Login() {
   const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -39,18 +41,20 @@ export default function Login() {
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    setError(undefined);
     const { data, error } = await api.request<AuthResponse>("/users/login", {
       method: "post",
       data: values,
     });
     if (error) {
       setError(error.message);
-      console.log(error);
     }
     if (data) {
       localStorage.setItem("token", data.result.token);
       router.push("/dashboard");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -85,8 +89,9 @@ export default function Login() {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isLoading}>
             {error ? error : "Iniciar Sesión"}
+            {isLoading && <Loader />}
           </Button>
         </div>
       </form>

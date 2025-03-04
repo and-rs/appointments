@@ -44,6 +44,7 @@ const formSchema = z
 
 export default function Signup() {
   const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,6 +57,8 @@ export default function Signup() {
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    setError(undefined);
     const { data, error } = await api.request<AuthResponse>("/users/create", {
       method: "post",
       data: values,
@@ -67,6 +70,7 @@ export default function Signup() {
       localStorage.setItem("token", data.result.token);
       router.push("/dashboard");
     }
+    setIsLoading(false);
   };
 
   return (
