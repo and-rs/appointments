@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { api, fetcher } from "@/lib/axios";
+import { api } from "@/lib/axios";
+import { AuthResponse } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,7 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { AuthResponse } from "@/lib/types";
 
 const formSchema = z
   .object({
