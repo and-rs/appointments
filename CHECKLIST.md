@@ -34,10 +34,10 @@
 ## Required Documentation
 - [x] GitHub Repository
   - [x] Project Structure
-  - [ ] Tech Stack Explanation
+  - [x] Tech Stack Explanation
   - [ ] Database Schema
   - [ ] API Routes
-- [ ] README
+- [x] README
   - [ ] Installation Steps
   - [ ] Environment Setup
   - [ ] Running Instructions
