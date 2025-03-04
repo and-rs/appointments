@@ -4,6 +4,9 @@ Aplicación fullstack para gestión de citas médicas, construida con TypeScript
 
   - [Ver Checklist](./CHECKLIST.md)
 
+> [!NOTE]
+> El archivo `./flake.nix` es una alternativa para crear shells de desarrollo con dependencias que mantienen sus versiones controladas mediante el archivo `./flake.lock`. Su principal ventaja para este proyecto es permitir especificar una versión de Node.js y evitar la instalación global de `aws-cdk`. Sin embargo, `flake.nix` no es esencial para que el proyecto funcione correctamente.
+
 ## Estructura del Proyecto (Monorepo)
 
 Este proyecto es un monorepo que contiene las siguientes carpetas principales:

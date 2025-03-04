@@ -14,6 +14,7 @@
   - [x] Actualizar con verificación de disponibilidad
   - [x] Eliminar con verificación de propiedad
 - [ ] Asignación de Doctores (Admin) - No implementado por no ser requisito core
+- [ ] Pruebas unitarias
 
 ## Frontend Core (En Progreso)
 - [x] Configuración del Proyecto (Next.js + TypeScript)
@@ -36,13 +37,12 @@
   - [x] Estructura del Proyecto
   - [x] Explicación del Stack Tecnológico
   - [ ] Esquema de Base de Datos
-  - [ ] Rutas API
+  - [x] Rutas API
 - [x] README
-  - [ ] Pasos de Instalación
-  - [ ] Configuración del Entorno
-  - [ ] Instrucciones para Ejecutar
-- [ ] Documentación API
-  - [ ] Endpoints
+  - [x] Pasos de Instalación
+  - [x] Configuración del Entorno
+- [x] Documentación API
+  - [x] Endpoints
   - [ ] Ejemplos de Solicitud/Respuesta
   - [ ] Requisitos de Autenticación
 
@@ -51,7 +51,7 @@
 
 ## Estado Actual
 - Backend completamente funcional con todos los requisitos core (excepto pruebas unitarias :c)
-- Frontend con la mayoría de la funcionalidad CRUD funcionando
+- Frontend con la mayoría de la funcionalidad CRUD funcionando (falta updateAppointments)
 - Sistema de autenticación completo
 - Operaciones de base de datos funcionando
 - Necesario completar:
