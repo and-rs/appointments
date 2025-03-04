@@ -55,6 +55,6 @@
 - Sistema de autenticación completo
 - Operaciones de base de datos funcionando
 - Necesario completar:
-  1. Interfaz de Usuario para Actualizar cita (Update appointment UI)
-  2. Documentación (Documentation)
-  3. Pruebas (Tests)
+  1. Interfaz de Usuario para Actualizar cita (Update appointment UI)
+  2. Documentación (Documentation)
+  3. Pruebas (Tests)
