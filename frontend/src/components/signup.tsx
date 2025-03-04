@@ -136,7 +136,7 @@ export default function Signup() {
 
           <Button type="submit" className="w-full">
             {error ? error : "Registrarse"}
-            {isLoading && <Loader />}
+            {isLoading && <Loader className="animate-spin" />}
           </Button>
         </div>
       </form>

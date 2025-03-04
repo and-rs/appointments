@@ -91,7 +91,7 @@ export default function Login() {
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {error ? error : "Iniciar Sesión"}
-            {isLoading && <Loader />}
+            {isLoading && <Loader className="animate-spin" />}
           </Button>
         </div>
       </form>
