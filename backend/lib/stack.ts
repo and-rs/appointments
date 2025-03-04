@@ -89,6 +89,7 @@ export class AppointmentsStack extends cdk.Stack {
         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
       environment: {
+        JWT_SECRET: dbSecret.secretArn,
         DB_HOST: dbInstance.dbInstanceEndpointAddress,
         DB_PORT: dbInstance.dbInstanceEndpointPort,
         DB_SECRET_ARN: dbSecret.secretArn,
@@ -117,7 +118,25 @@ export class AppointmentsStack extends cdk.Stack {
       vpcSubnets: {
         subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
       },
-      timeout: cdk.Duration.seconds(60),
+      timeout: cdk.Duration.minutes(1),
+      bundling: {
+        minify: true,
+        sourceMap: true,
+        commandHooks: {
+          beforeBundling() {
+            return [];
+          },
+          afterBundling(inputDir: string, outputDir: string): string[] {
+            return [
+              `cp -r ${inputDir}/migrations/sql ${outputDir}`,
+              `cp ${inputDir}/global-bundle.pem ${outputDir}`,
+            ];
+          },
+          beforeInstall() {
+            return [];
+          },
+        },
+      },
       environment: {
         DB_HOST: dbInstance.dbInstanceEndpointAddress,
         DB_PORT: dbInstance.dbInstanceEndpointPort,

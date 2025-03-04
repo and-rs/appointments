@@ -4,7 +4,7 @@ import Database from "../src/database/init";
 
 async function runMigrations() {
   try {
-    const migrationsPath = path.join(__dirname, "../migrations/sql");
+    const migrationsPath = path.join(__dirname, "./sql");
     const files = fs
       .readdirSync(migrationsPath)
       .filter((f) => f.endsWith(".sql"))
