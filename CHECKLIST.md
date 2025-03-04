@@ -1,60 +1,60 @@
-# Medical Appointments System Checklist
+# Checklist del Sistema de Citas Médicas
 
 ## Backend Core ✅
-- [x] Project Setup (Express + TypeScript + PostgreSQL)
-- [x] Database Schema & Migrations
-- [x] Authentication System
-- [x] User Management
-  - [x] Register
-  - [x] Login
-  - [x] CRUD Operations
-- [x] Appointments Core Features
-  - [x] Create with doctor & time validation
-  - [x] Read user's appointments with details
-  - [x] Update with availability check
-  - [x] Delete with ownership verification
-- [ ] Doctor Assignment (Admin) - Not implemented as not core requirement
+- [x] Configuración del Proyecto (Express + TypeScript + PostgreSQL)
+- [x] Esquema de Base de Datos y Migraciones
+- [x] Sistema de Autenticación
+- [x] Gestión de Usuarios
+  - [x] Registro (Register)
+  - [x] Inicio de Sesión (Login)
+  - [x] Operaciones CRUD
+- [x] Funcionalidades Core de Citas
+  - [x] Crear con validación de médico y hora
+  - [x] Leer citas de usuario con detalles
+  - [x] Actualizar con verificación de disponibilidad
+  - [x] Eliminar con verificación de propiedad
+- [ ] Asignación de Doctores (Admin) - No implementado por no ser requisito core
 
-## Frontend Core (In Progress)
-- [x] Project Setup (Next.js + TypeScript)
-- [x] API Integration
-  - [x] Axios setup
-  - [x] SWR integration
-  - [x] Auth handling
-- [x] Authentication Pages
-  - [x] Login Form
-  - [x] Registration Form
-- [x] Appointment Management
-  - [x] View Appointments
-    - [x] List with date, time, doctor details
-  - [x] Delete Appointment
-  - [x] Create Appointment
-  - [ ] Update Appointment (Next)
+## Frontend Core (En Progreso)
+- [x] Configuración del Proyecto (Next.js + TypeScript)
+- [x] Integración API (API Integration)
+  - [x] Configuración de Axios (Axios setup)
+  - [x] Integración de SWR (SWR integration)
+  - [x] Manejo de Autenticación (Auth handling)
+- [x] Páginas de Autenticación
+  - [x] Formulario de Inicio de Sesión (Login Form)
+  - [x] Formulario de Registro (Registration Form)
+- [x] Gestión de Citas
+  - [x] Ver Citas (View Appointments)
+  - [x] Listar con fecha, hora, detalles del doctor (List with date, time, doctor details)
+  - [x] Eliminar Cita (Delete Appointment)
+  - [x] Crear Cita (Create Appointment)
+  - [ ] Actualizar Cita (Update Appointment) (Próximo - Next)
 
-## Required Documentation
-- [x] GitHub Repository
-  - [x] Project Structure
-  - [x] Tech Stack Explanation
-  - [ ] Database Schema
-  - [ ] API Routes
+## Documentación Requerida
+- [x] Repositorio GitHub (GitHub Repository)
+  - [x] Estructura del Proyecto (Project Structure)
+  - [x] Explicación del Stack Tecnológico (Tech Stack Explanation)
+  - [ ] Esquema de Base de Datos (Database Schema)
+  - [ ] Rutas API (API Routes)
 - [x] README
-  - [ ] Installation Steps
-  - [ ] Environment Setup
-  - [ ] Running Instructions
-- [ ] API Documentation
-  - [ ] Endpoints
-  - [ ] Request/Response Examples
-  - [ ] Auth Requirements
+  - [ ] Pasos de Instalación (Installation Steps)
+  - [ ] Configuración del Entorno (Environment Setup)
+  - [ ] Instrucciones para Ejecutar (Running Instructions)
+- [ ] Documentación API (API Documentation)
+  - [ ] Endpoints
+  - [ ] Ejemplos de Solicitud/Respuesta (Request/Response Examples)
+  - [ ] Requisitos de Autenticación (Auth Requirements)
 
-## Required Testing
-- [ ] Backend Unit Tests
+## Testing Requerido
+- [ ] Pruebas Unitarias Backend (Backend Unit Tests)
 
-## Current Status
-- Backend is fully functional with all core requirements (except unit testing :c)
-- Frontend has most CRUD functionality working
-- Authentication system is complete
-- Database operations are working
-- Need to complete:
-  1. Update appointment UI
-  2. Documentation
-  3. Tests
+## Estado Actual
+- Backend completamente funcional con todos los requisitos core (excepto pruebas unitarias :c)
+- Frontend con la mayoría de la funcionalidad CRUD funcionando
+- Sistema de autenticación completo
+- Operaciones de base de datos funcionando
+- Necesario completar:
+  1. Interfaz de Usuario para Actualizar cita (Update appointment UI)
+  2. Documentación (Documentation)
+  3. Pruebas (Tests)
