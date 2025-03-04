@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/lib/axios";
 import { AuthResponse } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -135,6 +136,7 @@ export default function Signup() {
 
           <Button type="submit" className="w-full">
             {error ? error : "Registrarse"}
+            {isLoading && <Loader />}
           </Button>
         </div>
       </form>
