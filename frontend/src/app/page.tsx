@@ -1,11 +1,15 @@
 "use client";
 
 import AuthCard from "@/components/auth-card";
+import { Badge } from "@/components/ui/badge";
 import { api } from "@/lib/axios";
+import { Check, X } from "lucide-react";
 import useSWR from "swr";
 
 export default function Home() {
-  const { data, error, isLoading } = useSWR(api.fetch("/"));
+  const { data, error, isLoading } = useSWR("/", (url: string) =>
+    api.fetch(url),
+  );
 
   return (
     <main className="flex flex-col p-4 min-h-screen bg-background">
@@ -16,13 +20,23 @@ export default function Home() {
 
         <AuthCard />
 
-        <span className={`font-mono text-sm ${isLoading && "animate-pulse"}`}>
-          {isLoading && !data
-            ? "Loading..."
-            : error
-              ? "Connection to backend failed."
-              : "Backend is operational."}
-        </span>
+        <Badge
+          variant={"outline"}
+          className={`font-mono text-sm [&>svg]:size-4 ${isLoading && "animate-pulse"}`}
+        >
+          {isLoading && !data ? (
+            "Cargando..."
+          ) : error ? (
+            <>
+              Error de conexión con el backend.
+              <X />
+            </>
+          ) : (
+            <>
+              Backend operativo. <Check />
+            </>
+          )}
+        </Badge>
       </div>
     </main>
   );

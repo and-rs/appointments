@@ -64,7 +64,7 @@ export default function Signup() {
       setError(error.message);
     }
     if (data) {
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.result.token);
       router.push("/dashboard");
     }
   };
