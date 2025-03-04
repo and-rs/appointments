@@ -46,17 +46,17 @@ La aplicación ofrece las siguientes funcionalidades:
 
 Antes de comenzar, asegúrate de tener instalados los siguientes requisitos:
 
-  * [Node.js 22+](https://www.google.com/url?sa=E&source=gmail&q=https://nodejs.org/)
-  * [pnpm](https://www.google.com/url?sa=E&source=gmail&q=https://pnpm.io/)
-  * [Docker](https://www.google.com/url?sa=E&source=gmail&q=https://www.docker.com/) (para PostgreSQL local)
-  * [AWS CLI](https://www.google.com/url?sa=E&source=gmail&q=https://aws.amazon.com/cli/) (para despliegue en AWS)
+  * [Node.js 22+](https://nodejs.org/)
+  * [pnpm](https://pnpm.io/)
+  * [Docker](https://www.docker.com/) (para PostgreSQL local)
+  * [AWS CLI](https://aws.amazon.com/cli/) (para despliegue en AWS)
 
 ## Instalación y Configuración
 
 1.  **Clonar el repositorio:**
 
     ```bash
-    git clone [https://github.com/and-rs/appointments.git](https://github.com/and-rs/appointments.git)
+    git clone https://github.com/and-rs/appointments.git
     cd appointments
     ```
 
@@ -92,11 +92,11 @@ Documentación específica para cada parte del proyecto:
 
 ## Desarrollo y Convenciones
 
-  * **Gestor de paquetes**: [pnpm](https://www.google.com/url?sa=E&source=gmail&q=https://pnpm.io/)
-  * **Linter Frontend**: [ESLint](https://www.google.com/url?sa=E&source=gmail&q=https://eslint.org/)
-  * **Lenguaje**: [TypeScript](https://www.google.com/url?sa=E&source=gmail&q=https://www.typescriptlang.org/)
+  * **Gestor de paquetes**: [pnpm](https://pnpm.io/)
+  * **Linter Frontend**: [ESLint](https://eslint.org/)
+  * **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
 
 ## Despliegue (Producción)
 
-  * **Backend**: [AWS Lambda](https://www.google.com/url?sa=E&source=gmail&q=https://aws.amazon.com/lambda/) + [API Gateway](https://www.google.com/url?sa=E&source=gmail&q=https://aws.amazon.com/api-gateway/)
-  * **Frontend**: [Vercel](https://www.google.com/url?sa=E&source=gmail&q=https://vercel.com/)
+  * **Backend**: [AWS Lambda](https://aws.amazon.com/lambda/) + [API Gateway](https://aws.amazon.com/api-gateway/)
+  * **Frontend**: [Vercel](https://vercel.com/)
