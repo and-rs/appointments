@@ -150,3 +150,6 @@ Esto crea:
 
 - [ ] Rate limiting
 - [ ] Tests unitarios
+
+> [!NOTE] 
+> Habría que configurar mejor las cors en producción
