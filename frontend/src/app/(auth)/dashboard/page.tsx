@@ -2,46 +2,35 @@
 
 import AppointmentsList from "@/components/appointments-list";
 import StatCard from "@/components/stat-card";
+import { api } from "@/lib/axios";
 import { Appointment } from "@/lib/types";
-import { useState } from "react";
-
-const mockAppointments: Appointment[] = [
-  {
-    id: "1",
-    doctor_id: "Dr. García",
-    date: "2025-03-04",
-    time: "10:00 AM",
-  },
-  {
-    id: "2",
-    doctor_id: "Dra. Rodríguez",
-    date: "2025-03-10",
-    time: "3:30 PM",
-  },
-  {
-    id: "3",
-    doctor_id: "Dr. Martínez",
-    date: "2025-03-15",
-    time: "11:15 AM",
-  },
-];
+import { Loader } from "lucide-react";
+import useSWR from "swr";
 
 export default function Dashboard() {
-  const [appointments] = useState(mockAppointments);
+  const { data } = useSWR("/appointments/read", (url) =>
+    api.fetch<{ result: { appointments: Appointment[] } }>(url, {
+      requiresAuth: true,
+    }),
+  );
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Bienvenido, Usuario
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">Bienvenido,</h1>
         <p className="text-muted-foreground">
           Gestiona tus citas médicas desde un solo lugar
         </p>
       </div>
 
-      <StatCard appointments={appointments} />
-      <AppointmentsList appointments={appointments} />
+      {data ? (
+        <>
+          <StatCard result={data.result} />
+          <AppointmentsList result={data.result} />
+        </>
+      ) : (
+        <Loader className="animate-spin" />
+      )}
     </div>
   );
 }

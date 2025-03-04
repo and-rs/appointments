@@ -31,7 +31,7 @@ export default function RootLayout({
       className={cn(fontSans.variable, fontMono.variable, "antialiased")}
     >
       <body>
-        <main className="mx-auto max-w-screen-lg ring h-lvh ring-border">
+        <main className="mx-auto max-w-screen-lg ring min-h-fit ring-border">
           {children}
         </main>
       </body>

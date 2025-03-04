@@ -14,12 +14,14 @@ export interface Doctor {
 }
 
 export interface Appointment {
-  id?: string;
-  user_id?: string;
+  id: string;
+  user_id: string;
   doctor_id: string;
+  doctor_name: string;
+  doctor_specialty: string;
   date: string;
   time: string;
-  created_at?: string;
+  created_at: string;
 }
 
 export interface AuthResponse {
