@@ -33,12 +33,14 @@ export default function StatCard({ result }: Props) {
           <Clock className="w-4 h-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{appointments[0]?.time}</div>
+          <div className="text-2xl font-bold">
+            {appointments.length > 0 ? appointments[0]?.time : "-"}
+          </div>
           <p className="text-xs text-muted-foreground">
-            {appointments
-              ? format(appointments[0].created_at, "PPP", { locale: es })
-              : "Ups! No hay fecha"}{" "}
-            - {appointments[0]?.doctor_name}
+            {appointments.length > 0
+              ? format(appointments[0]?.created_at, "PPP", { locale: es })
+              : "No tienes citas próximas."}
+            &nbsp;{appointments[0]?.doctor_name}
           </p>
         </CardContent>
       </Card>

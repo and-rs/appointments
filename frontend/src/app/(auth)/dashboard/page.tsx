@@ -8,7 +8,7 @@ import { Loader } from "lucide-react";
 import useSWR from "swr";
 
 export default function Dashboard() {
-  const { data } = useSWR("/appointments/read", (url) =>
+  const { data, mutate } = useSWR("/appointments/read", (url) =>
     api.fetch<{ result: { appointments: Appointment[] } }>(url, {
       requiresAuth: true,
     }),
@@ -26,7 +26,7 @@ export default function Dashboard() {
       {data ? (
         <>
           <StatCard result={data.result} />
-          <AppointmentsList result={data.result} />
+          <AppointmentsList result={data.result} mutate={mutate} />
         </>
       ) : (
         <Loader className="animate-spin" />
