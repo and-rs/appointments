@@ -1,72 +1,68 @@
-import axios, { AxiosRequestConfig, Method } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, Method } from "axios";
 
 interface RequestConfig extends AxiosRequestConfig {
   requiresAuth?: boolean;
   method?: Method;
 }
 
-interface ApiResponse<T> {
-  data: T | null;
-  error: {
-    message: string;
-    status?: number;
-  } | null;
-}
+class ApiClient {
+  private client: AxiosInstance;
 
-export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-export const fetcher = async <T>(
-  url: string,
-  config: RequestConfig = {},
-): Promise<ApiResponse<T>> => {
-  const {
-    requiresAuth = false,
-    method = "get",
-    headers = {},
-    ...rest
-  } = config;
-
-  if (requiresAuth) {
-    const token = localStorage.getItem("token");
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
+  constructor() {
+    this.client = axios.create({
+      baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 
-  try {
-    const response = await api.request({
+  private getAuthHeader(): { Authorization?: string } {
+    const token = localStorage.getItem("token");
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  async fetch<T>(url: string, config: RequestConfig = {}): Promise<T> {
+    const { requiresAuth = false, method = "get", ...rest } = config;
+
+    const response = await this.client.request({
       url,
       method,
-      headers,
+      headers: {
+        ...(requiresAuth ? this.getAuthHeader() : {}),
+      },
       ...rest,
     });
 
-    return {
-      data: response.data.result,
-      error: null,
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
+    return response.data;
+  }
+
+  async request<T>(url: string, config: RequestConfig = {}) {
+    try {
+      const data = await this.fetch<T>(url, config);
+      return {
+        data,
+        error: null,
+      };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          data: null,
+          error: {
+            message: error.response?.data?.message || error.message,
+            status: error.response?.status,
+          },
+        };
+      }
       return {
         data: null,
         error: {
-          message: error.response?.data?.message || error.message,
-          status: error.response?.status,
+          message: "An unexpected error occurred",
+          status: 500,
         },
       };
     }
-
-    return {
-      data: null,
-      error: {
-        message: "An unexpected error occurred",
-        status: 500,
-      },
-    };
   }
-};
+}
+
+export const api = new ApiClient();

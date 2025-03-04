@@ -23,10 +23,12 @@ export interface Appointment {
 }
 
 export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    email: string;
-    name: string;
+  result: {
+    token: string;
+    user: {
+      id: string;
+      email: string;
+      name: string;
+    };
   };
 }

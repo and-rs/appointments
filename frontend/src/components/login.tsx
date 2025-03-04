@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetcher } from "@/lib/axios";
 import { AuthResponse } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,7 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { useRouter } from "next/navigation";
+import { api } from "@/lib/axios";
 
 const formSchema = z.object({
   email: z
@@ -39,15 +39,16 @@ export default function Login() {
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { data, error } = await fetcher<AuthResponse>("/users/login", {
+    const { data, error } = await api.request<AuthResponse>("/users/login", {
       method: "post",
       data: values,
     });
     if (error) {
       setError(error.message);
+      console.log(error);
     }
     if (data) {
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.result.token);
       router.push("/dashboard");
     }
   };

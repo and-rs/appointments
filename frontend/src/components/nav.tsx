@@ -1,13 +1,21 @@
 "use client";
 
+import { api } from "@/lib/axios";
+import { AuthResponse } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Calendar, LogOut, Plus } from "lucide-react";
+import { Calendar, Loader2Icon, LogOut, Plus, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import useSWR from "swr";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
 export default function Nav() {
   const pathname = usePathname();
-  const navigate = useRouter();
+  const router = useRouter();
+
+  const { data, error, isLoading } = useSWR("/users/authorized", (url) =>
+    api.fetch<AuthResponse>(url, { requiresAuth: true }),
+  );
 
   const navItems = [
     {
@@ -23,19 +31,34 @@ export default function Nav() {
   ];
 
   return (
-    <nav className="flex fixed flex-col gap-4 justify-center py-4 px-0 w-full max-w-screen-lg border-b md:flex-row md:justify-around md:p-6 bg-background">
-      <h2 className="px-4 text-xl font-bold tracking-tight md:w-1/3">
-        Appointments App
-      </h2>
+    <nav className="flex fixed z-50 flex-col gap-4 justify-center p-4 w-full max-w-screen-lg border-b md:flex-row md:justify-between md:p-6 bg-background">
+      <div className="flex gap-2 p-1 pl-2 rounded-xl border sm:gap-4 w-fit">
+        <h2 className="self-center mb-1 font-bold tracking-tight sm:text-xl text-md">
+          Appointments App
+        </h2>
+        <Badge
+          variant={"outline"}
+          className="self-center p-1 px-2 h-8 text-xs sm:text-sm"
+        >
+          {error ? null : isLoading ? (
+            <Loader2Icon className="self-center animate-spin size-5" />
+          ) : (
+            <>
+              <User />
+              <span>{data && data.result.user.name}</span>
+            </>
+          )}
+        </Badge>
+      </div>
 
-      <div className="flex flex-row gap-2 px-4 md:justify-end md:w-2/3">
+      <div className="flex flex-row gap-2 p-1 rounded-xl border md:justify-end w-fit">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Button
-              onClick={() => navigate.push(item.href)}
+              onClick={() => router.push(item.href)}
               key={item.href}
-              variant={"ghost"}
+              variant={"outline"}
               size={"sm"}
               className={cn(
                 "text-xs sm:text-sm rounded-md transition-colors self-center p-2",
@@ -50,10 +73,10 @@ export default function Nav() {
 
         <Button
           onClick={() => {
-            navigate.push("/");
+            router.push("/");
             localStorage.removeItem("token");
           }}
-          variant={"ghost"}
+          variant={"outline"}
           size={"sm"}
           className="self-center p-2 text-xs rounded-md transition-colors sm:text-sm"
         >

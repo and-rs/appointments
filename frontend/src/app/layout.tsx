@@ -30,8 +30,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(fontSans.variable, fontMono.variable, "antialiased")}
     >
-      <body className="mx-auto max-w-screen-lg ring ring-border ring-x">
-        {children}
+      <body>
+        <main className="mx-auto max-w-screen-lg ring h-lvh ring-border">
+          {children}
+        </main>
       </body>
     </html>
   );

@@ -1,11 +1,11 @@
 "use client";
 
 import AuthCard from "@/components/auth-card";
-import { fetcher } from "@/lib/axios";
+import { api } from "@/lib/axios";
 import useSWR from "swr";
 
 export default function Home() {
-  const { data, error, isLoading } = useSWR("/", fetcher);
+  const { data, error, isLoading } = useSWR(api.fetch("/"));
 
   return (
     <main className="flex flex-col p-4 min-h-screen bg-background">

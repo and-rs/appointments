@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetcher } from "@/lib/axios";
+import { api, fetcher } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -56,7 +56,7 @@ export default function Signup() {
   });
 
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
-    const { data, error } = await fetcher<AuthResponse>("/users/create", {
+    const { data, error } = await api.request<AuthResponse>("/users/create", {
       method: "post",
       data: values,
     });
