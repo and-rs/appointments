@@ -1,19 +1,25 @@
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { RequestHandler } from "express";
 import Database from "@/database/init";
 import HandlerFactory from "@/utils/handler";
 import { User } from "@/types";
 
-export const createUsers: RequestHandler = HandlerFactory.create<{
-  user: User;
-}>(
-  async (req, res) => {
+interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+  };
+}
+
+export const createUsers: RequestHandler = HandlerFactory.create<AuthResponse>(
+  async (req) => {
     const { email, password, name } = req.body as User;
 
     if (!email || !password || !name) {
-      res.status(400).json({
-        error: "Email, password and name are required",
-      });
+      throw new Error("Email, password and name are required");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,21 +30,33 @@ export const createUsers: RequestHandler = HandlerFactory.create<{
     );
 
     if (existingUser.length > 0) {
-      res.status(409).json({
-        error: "Email already registered",
-      });
+      throw new Error("Email already registered");
     }
 
-    const result = await Database.query(
+    const result = await Database.query<User>(
       `INSERT INTO users (email, password, name)
        VALUES ($1, $2, $3)
-       RETURNING id, email, name, created_at`,
+       RETURNING id, email, name`,
       [email, hashedPassword, name],
     );
 
     const user = result[0];
 
-    return { user };
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET!,
+      { expiresIn: "24h" },
+    );
+
+    return {
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+    };
   },
   { errorName: "Failed to create user", successStatus: 201 },
 );

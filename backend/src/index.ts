@@ -2,16 +2,19 @@ import Database from "@/database/init";
 import appointmentsRouter from "@/routes/appointments";
 import doctorsRouter from "@/routes/doctors";
 import userRouter from "@/routes/users";
+import cors from "cors";
 import "dotenv/config";
 import express, { Application, Request, Response } from "express";
 
 const app: Application = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", async (_req, res) => {
   const result = await Database.query("SELECT version()");
   res.json({ test: result[0].version });
+  console.log("Test call");
 });
 
 app.use("/users", userRouter);

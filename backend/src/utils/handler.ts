@@ -22,7 +22,7 @@ export default class HandlerFactory {
         const result = await operation(req as R, res, next);
 
         if (result) {
-          res.status(successStatus).json(result);
+          res.status(successStatus).json({ success: true, result });
         }
 
         console.log(`Success => ${req.method} ${req.baseUrl}${req.path}`);
