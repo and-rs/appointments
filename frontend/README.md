@@ -1,36 +1,157 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend - Sistema de Citas Médicas
 
-## Getting Started
+Aplicación web construida con Next.js, TypeScript y Tailwind CSS, enfocada en una experiencia de usuario fluida y responsiva.
 
-First, run the development server:
+## Características Técnicas Destacadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Cliente HTTP Personalizado
+Implementación de un cliente Axios orientado a objetos para:
+- Manejo consistente de errores
+- Integración con SWR
+- Gestión de autenticación
+
+```typescript
+class ApiClient {
+  private client: AxiosInstance;
+
+  async fetch<T>(url: string, config: RequestConfig = {}): Promise<T> {
+    const { requiresAuth = false, method = "get", ...rest } = config;
+    const response = await this.client.request({
+      url,
+      method,
+      headers: {
+        ...(requiresAuth ? this.getAuthHeader() : {}),
+      },
+      ...rest,
+    });
+    return response.data;
+  }
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Gestión de Estado
+- SWR para fetching y caché
+- Estado local con React hooks
+- Manejo optimizado de re-renders
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Validación de Formularios
+Integración de React Hook Form con Zod:
+```typescript
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  name: z.string().min(2)
+});
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+const form = useForm<z.infer<typeof formSchema>>({
+  resolver: zodResolver(formSchema)
+});
+```
 
-## Learn More
+## Estructura de Carpetas
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # App Router
+│   ├── (auth)/            # Rutas protegidas
+│   │    └── dashboard/     # Panel principal
+│   └── page.tsx            # Página de login
+├── components/
+│   ├── appointments/      # Componentes de citas
+│   │    ├── date-picker.tsx
+│   │    └── doctor-select.tsx
+│   └── ui/                # Componentes base
+└── lib/
+    ├── axios.ts            # Cliente HTTP
+    └── types.ts            # Tipos TypeScript
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Componentes Principales
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### AppointmentsList
+- Listado de citas con SWR
+- Manejo de estados de carga (loading states)
+- Acciones de edición/eliminación
+- Formato de fechas con date-fns
 
-## Deploy on Vercel
+### Formularios
+- Login/Registro con validación
+- Creación/Edición de citas
+- Selección de médicos y horarios
+- Feedback de forms en tiempo real
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Rutas y Navegación
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Públicas
+- `/` - Login/Registro
+
+### Protegidas
+- `/dashboard` - Panel principal
+- `/dashboard/create` - Nueva cita
+
+## Decisiones Técnicas
+
+### Next.js App Router
+- Fácil de desplegar
+- Bastante documentación
+
+### Componentes UI
+- shadcn/ui como base, usando únicamente estilos de Tailwind CSS y no incrementar las
+dependencias (solo hay algunas excepciones como selectores y el calendario)
+- Diseño responsivo
+
+### TypeScript
+- Tipos estrictos
+- Interfaces compartidas con backend
+- Generics para componentes reusables
+
+## Desarrollo Local
+
+1. Configurar variables de entorno:
+```bash
+cp ./.env.example ./.env
+
+# Variables requeridas:
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+2. Instalar dependencias:
+```bash
+pnpm install
+```
+
+3. Iniciar servidor de desarrollo:
+```bash
+pnpm dev
+```
+
+## Integración con Backend
+
+### Fetching de Datos
+```typescript
+// Ejemplo de hook para citas
+function useAppointments() {
+  const { data, error } = useSWR('/appointments/read',
+    url => api.fetch(url, { requiresAuth: true })
+  );
+
+  return {
+    appointments: data?.appointments,
+    isLoading: !error && !data,
+    isError: error
+  };
+}
+```
+
+### Manejo de Errores
+- Mensajes de error específicos directos desde el backend
+- Reintentos automáticos (SWR)
+- Feedback visual (No está completo)
+
+## Mejoras Futuras
+
+- [ ] Cimentar mejor el fetching pipeline
+- [ ] Optimistic UI updates
+- [ ] Infinite scrolling para citas
+- [ ] Temas (light y dark mode)
+- [ ] Tests E2E con Cypress o Playwright
