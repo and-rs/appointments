@@ -5,8 +5,8 @@
 - [x] Esquema de Base de Datos y Migraciones
 - [x] Sistema de Autenticación
 - [x] Gestión de Usuarios
-  - [x] Registro (Register)
-  - [x] Inicio de Sesión (Login)
+  - [x] Registro
+  - [x] Inicio de Sesión
   - [x] Operaciones CRUD
 - [x] Funcionalidades Core de Citas
   - [x] Crear con validación de médico y hora
@@ -17,37 +17,37 @@
 
 ## Frontend Core (En Progreso)
 - [x] Configuración del Proyecto (Next.js + TypeScript)
-- [x] Integración API (API Integration)
-  - [x] Configuración de Axios (Axios setup)
-  - [x] Integración de SWR (SWR integration)
-  - [x] Manejo de Autenticación (Auth handling)
+- [x] Integración API
+  - [x] Configuración de Axios
+  - [x] Integración de SWR
+  - [x] Manejo de Autenticación
 - [x] Páginas de Autenticación
-  - [x] Formulario de Inicio de Sesión (Login Form)
-  - [x] Formulario de Registro (Registration Form)
+  - [x] Formulario de Inicio de Sesión
+  - [x] Formulario de Registro
 - [x] Gestión de Citas
-  - [x] Ver Citas (View Appointments)
-  - [x] Listar con fecha, hora, detalles del doctor (List with date, time, doctor details)
-  - [x] Eliminar Cita (Delete Appointment)
-  - [x] Crear Cita (Create Appointment)
-  - [ ] Actualizar Cita (Update Appointment) (Próximo - Next)
+  - [x] Ver Citas
+  - [x] Listar con fecha, hora, detalles del doctor
+  - [x] Eliminar Cita
+  - [x] Crear Cita
+  - [ ] Actualizar Cita (siguiente)
 
 ## Documentación Requerida
-- [x] Repositorio GitHub (GitHub Repository)
-  - [x] Estructura del Proyecto (Project Structure)
-  - [x] Explicación del Stack Tecnológico (Tech Stack Explanation)
-  - [ ] Esquema de Base de Datos (Database Schema)
-  - [ ] Rutas API (API Routes)
+- [x] Repositorio GitHub
+  - [x] Estructura del Proyecto
+  - [x] Explicación del Stack Tecnológico
+  - [ ] Esquema de Base de Datos
+  - [ ] Rutas API
 - [x] README
-  - [ ] Pasos de Instalación (Installation Steps)
-  - [ ] Configuración del Entorno (Environment Setup)
-  - [ ] Instrucciones para Ejecutar (Running Instructions)
-- [ ] Documentación API (API Documentation)
+  - [ ] Pasos de Instalación
+  - [ ] Configuración del Entorno
+  - [ ] Instrucciones para Ejecutar
+- [ ] Documentación API
   - [ ] Endpoints
-  - [ ] Ejemplos de Solicitud/Respuesta (Request/Response Examples)
-  - [ ] Requisitos de Autenticación (Auth Requirements)
+  - [ ] Ejemplos de Solicitud/Respuesta
+  - [ ] Requisitos de Autenticación
 
 ## Testing Requerido
-- [ ] Pruebas Unitarias Backend (Backend Unit Tests)
+- [ ] Pruebas Unitarias Backend
 
 ## Estado Actual
 - Backend completamente funcional con todos los requisitos core (excepto pruebas unitarias :c)
@@ -55,6 +55,6 @@
 - Sistema de autenticación completo
 - Operaciones de base de datos funcionando
 - Necesario completar:
-  1. Interfaz de Usuario para Actualizar cita (Update appointment UI)
-  2. Documentación (Documentation)
-  3. Pruebas (Tests)
+  1. Interfaz de Usuario para Actualizar cita
+  2. Documentación
+  3. Pruebas
