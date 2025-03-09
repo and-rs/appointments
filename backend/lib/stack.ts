@@ -16,9 +16,7 @@ export class AppointmentsStack extends cdk.Stack {
     super(scope, id, props);
     const DB_NAME = "appointments";
 
-    const vpc = new ec2.Vpc(this, "Vpc", {
-      maxAzs: 2,
-    });
+    const vpc = ec2.Vpc.fromLookup(this, "DefaultVpc", { isDefault: true });
 
     const rdsSecurityGroup = new ec2.SecurityGroup(this, "RdsSecurityGroup", {
       vpc,
