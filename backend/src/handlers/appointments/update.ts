@@ -1,7 +1,7 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { Appointment } from "@/types";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { RequestHandler } from "express";
 
 export const updateAppointment: RequestHandler = HandlerFactory.create<
@@ -14,11 +14,11 @@ export const updateAppointment: RequestHandler = HandlerFactory.create<
     const user_id = req.user.id;
 
     if (!id) {
-      throw new Error("No appointment id provided");
+      throw new Error("No se proporcionó ID de la cita");
     }
 
     if (!date && !time) {
-      throw new Error("No updates provided");
+      throw new Error("No se proporcionaron actualizaciones para la cita");
     }
 
     const existing = await Database.query<Appointment>(
@@ -28,7 +28,7 @@ export const updateAppointment: RequestHandler = HandlerFactory.create<
     );
 
     if (!existing[0]) {
-      throw new Error("Appointment not found or unauthorized");
+      throw new Error("Cita no encontrada o no autorizada");
     }
 
     const conflicts = await Database.query(
@@ -40,7 +40,7 @@ export const updateAppointment: RequestHandler = HandlerFactory.create<
     );
 
     if (conflicts.length > 0) {
-      throw new Error("This time slot is not available");
+      throw new Error("Esta hora no está disponible");
     }
 
     const result = await Database.query<Appointment>(
@@ -56,6 +56,6 @@ export const updateAppointment: RequestHandler = HandlerFactory.create<
     return { appointment: result[0] };
   },
   {
-    errorName: "Failed to update appointment",
+    errorName: "No se pudo actualizar la cita",
   },
 );

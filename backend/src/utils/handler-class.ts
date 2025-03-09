@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 
-type HandlerOperation<T, R extends Request = Request> = (
+type HandlerOperation<T, R> = (
   req: R,
   res: Response,
   next: NextFunction,

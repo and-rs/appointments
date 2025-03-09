@@ -1,7 +1,7 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { Appointment } from "@/types";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { RequestHandler } from "express";
 
 export const readAppointments: RequestHandler = HandlerFactory.create<
@@ -26,6 +26,6 @@ export const readAppointments: RequestHandler = HandlerFactory.create<
     return { appointments: result };
   },
   {
-    errorName: "Failed to fetch appointments",
+    errorName: "No se pudieron obtener las citas",
   },
 );

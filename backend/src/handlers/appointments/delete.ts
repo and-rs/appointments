@@ -1,7 +1,7 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { Appointment } from "@/types";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { RequestHandler } from "express";
 
 export const deleteAppointment: RequestHandler = HandlerFactory.create<
@@ -13,7 +13,7 @@ export const deleteAppointment: RequestHandler = HandlerFactory.create<
     const user_id = req.user.id;
 
     if (!id) {
-      throw new Error("No appointment id provided");
+      throw new Error("No se proporcionó ID de cita");
     }
 
     const result = await Database.query<Appointment>(
@@ -24,12 +24,12 @@ export const deleteAppointment: RequestHandler = HandlerFactory.create<
     );
 
     if (!result[0]) {
-      throw new Error("Appointment not found or unauthorized");
+      throw new Error("Cita no encontrada o no autorizada");
     }
 
-    return { message: "Appointment deleted successfully" };
+    return { message: "Cita eliminada correctamente" };
   },
   {
-    errorName: "Failed to delete appointment",
+    errorName: "No se pudo eliminar la cita",
   },
 );

@@ -7,10 +7,7 @@ import * as fs from "node:fs";
 const secretManager = new SecretsManagerClient();
 const secretArn = process.env.DB_SECRET_ARN;
 
-async function getDatabaseSecrets(): Promise<{
-  username: string;
-  password: string;
-}> {
+async function getDatabaseSecrets() {
   try {
     const command = new GetSecretValueCommand({ SecretId: secretArn });
     const response = await secretManager.send(command);

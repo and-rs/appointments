@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { User } from "@/types";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 
 export const updateUser: RequestHandler = HandlerFactory.create<
   { user: User },
@@ -14,7 +14,7 @@ export const updateUser: RequestHandler = HandlerFactory.create<
     const email = req.body?.email;
 
     if (!id) {
-      throw new Error("No id provided");
+      throw new Error("No se proporcionó ID de usuario");
     }
 
     const result = await Database.query<User>(
@@ -29,10 +29,10 @@ export const updateUser: RequestHandler = HandlerFactory.create<
 
     const user = result[0];
     if (!user) {
-      throw new Error("User not found or update failed");
+      throw new Error("Usuario no encontrado o la actualización falló");
     }
 
     return { user };
   },
-  { errorName: "Failed to update user" },
+  { errorName: "No se pudo actualizar el usuario" },
 );

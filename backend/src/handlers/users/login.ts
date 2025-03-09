@@ -3,14 +3,14 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "@/types";
 import Database from "@/database/init";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 
 export const login: RequestHandler = HandlerFactory.create<{ token: string }>(
   async (req) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      throw new Error("Email and password are required");
+      throw new Error("Se requieren correo electrónico y contraseña");
     }
 
     const result = await Database.query<User & { password: string }>(
@@ -20,12 +20,12 @@ export const login: RequestHandler = HandlerFactory.create<{ token: string }>(
 
     const user = result[0];
     if (!user) {
-      throw new Error("Invalid credentials");
+      throw new Error("Credenciales inválidas");
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
-      throw new Error("Invalid credentials");
+      throw new Error("Credenciales inválidas");
     }
 
     const token = jwt.sign(
@@ -36,5 +36,5 @@ export const login: RequestHandler = HandlerFactory.create<{ token: string }>(
 
     return { token };
   },
-  { errorName: "Login failed" },
+  { errorName: "Inicio de sesión fallido" },
 );

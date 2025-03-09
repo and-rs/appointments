@@ -1,6 +1,6 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { RequestHandler } from "express";
 
 interface AuthorizedUser {
@@ -27,10 +27,10 @@ export const authorizedUser: RequestHandler = HandlerFactory.create<
     );
 
     if (!result[0]) {
-      throw new Error("User not found");
+      throw new Error("Usuario no encontrado");
     }
 
     return { user: result[0] };
   },
-  { errorName: "Failed to retrieve authorized user" },
+  { errorName: "No se pudo recuperar el usuario autorizado" },
 );

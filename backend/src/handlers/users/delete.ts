@@ -1,6 +1,6 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { RequestHandler } from "express";
 
 export const deleteUser: RequestHandler = HandlerFactory.create<
@@ -11,7 +11,7 @@ export const deleteUser: RequestHandler = HandlerFactory.create<
     const id = req.user?.id;
 
     if (!id) {
-      throw new Error("No id provided");
+      throw new Error("No se proporcionó ID de usuario");
     }
 
     const result = await Database.query(
@@ -22,10 +22,10 @@ export const deleteUser: RequestHandler = HandlerFactory.create<
     );
 
     if (!result[0]) {
-      throw new Error("User not found");
+      throw new Error("Usuario no encontrado");
     }
 
-    return { message: "User deleted successfully" };
+    return { message: "Usuario eliminado correctamente" };
   },
-  { errorName: "Failed to delete user" },
+  { errorName: "No se pudo eliminar el usuario" },
 );

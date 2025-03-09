@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { RequestHandler } from "express";
 import Database from "@/database/init";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { User } from "@/types";
 
 interface AuthResponse {
@@ -19,7 +19,7 @@ export const createUsers: RequestHandler = HandlerFactory.create<AuthResponse>(
     const { email, password, name } = req.body as User;
 
     if (!email || !password || !name) {
-      throw new Error("Email, password and name are required");
+      throw new Error("Se requieren correo electrónico, contraseña y nombre.");
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,7 +30,7 @@ export const createUsers: RequestHandler = HandlerFactory.create<AuthResponse>(
     );
 
     if (existingUser.length > 0) {
-      throw new Error("Email already registered");
+      throw new Error("Email ya registrado");
     }
 
     const result = await Database.query<User>(
@@ -42,7 +42,6 @@ export const createUsers: RequestHandler = HandlerFactory.create<AuthResponse>(
 
     const user = result[0];
 
-    // Generate JWT token
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET!,
@@ -58,5 +57,5 @@ export const createUsers: RequestHandler = HandlerFactory.create<AuthResponse>(
       },
     };
   },
-  { errorName: "Failed to create user", successStatus: 201 },
+  { errorName: "No se pudo crear el usuario", successStatus: 201 },
 );

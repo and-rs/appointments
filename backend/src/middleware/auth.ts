@@ -1,6 +1,6 @@
 import { Request, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 
 export interface AuthenticatedRequest extends Request {
   user: {
@@ -18,18 +18,18 @@ export const authenticate: RequestHandler = HandlerFactory.create(
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      throw new Error("Authentication required");
+      throw new Error("Autenticación requerida");
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
     if (!isValidToken(decoded)) {
-      throw new Error("Invalid token");
+      throw new Error("Token inválido");
     }
 
     (req as AuthenticatedRequest).user = decoded;
 
     next();
   },
-  { errorStatus: 401, errorName: "Failed authentication" },
+  { errorStatus: 401, errorName: "Autenticación fallida" },
 );

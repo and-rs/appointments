@@ -1,7 +1,7 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { Appointment } from "@/types";
-import HandlerFactory from "@/utils/handler";
+import HandlerFactory from "@/utils/handler-class";
 import { RequestHandler } from "express";
 
 export const createAppointment: RequestHandler = HandlerFactory.create<
@@ -13,7 +13,7 @@ export const createAppointment: RequestHandler = HandlerFactory.create<
     const user_id = req.user.id;
 
     if (!doctor_id || !date || !time) {
-      throw new Error("Missing required fields");
+      throw new Error("Faltan campos obligatorios");
     }
 
     const doctorExists = await Database.query(
@@ -22,7 +22,7 @@ export const createAppointment: RequestHandler = HandlerFactory.create<
     );
 
     if (!doctorExists[0]) {
-      throw new Error("Doctor not found");
+      throw new Error("No se pudo encontrar al doctor");
     }
 
     const conflicts = await Database.query(
@@ -34,7 +34,7 @@ export const createAppointment: RequestHandler = HandlerFactory.create<
     );
 
     if (conflicts.length > 0) {
-      throw new Error("This time slot is not available");
+      throw new Error("Esta hora no está disponible");
     }
 
     const result = await Database.query<Appointment>(
@@ -47,7 +47,7 @@ export const createAppointment: RequestHandler = HandlerFactory.create<
     return { appointment: result[0] };
   },
   {
-    errorName: "Failed to create appointment",
+    errorName: "No se pudo crear la cita",
     successStatus: 201,
   },
 );
