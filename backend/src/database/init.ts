@@ -36,10 +36,10 @@ class Database {
       });
 
       await this.instance.connect();
-      console.log("DB CONNECTED");
+      console.log("Database connected =>");
 
       this.instance.on("error", (error) => {
-        console.error("DB CONNECTION ERROR", error);
+        console.error("Database connection error =>", error);
         this.instance = null;
         this.isConnecting = false;
       });
@@ -47,7 +47,7 @@ class Database {
       return this.instance;
     } catch (error) {
       this.instance = null;
-      console.error("DB INIT ERRROR", error);
+      console.error("Database init error =>", error);
       throw error;
     } finally {
       this.isConnecting = false;
@@ -56,11 +56,7 @@ class Database {
 
   static async query<T = any>(sql: string, params?: any[]): Promise<T[]> {
     const client = await this.getInstance();
-    console.log("client => ", client);
-
     const result = await client.query(sql, params);
-    console.log("result of query => ", result);
-
     return result.rows;
   }
 }
