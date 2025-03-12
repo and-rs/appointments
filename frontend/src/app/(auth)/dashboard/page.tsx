@@ -1,7 +1,7 @@
 "use client";
 
-import AppointmentsList from "@/components/appointments-list";
-import StatCard from "@/components/stat-card";
+import AppointmentsList from "@/components/appointments/appointments-list";
+import StatCard from "@/components/appointments/stat-card";
 import ApiClient from "@/lib/axios";
 import { Appointment } from "@/lib/types";
 import { Loader } from "lucide-react";

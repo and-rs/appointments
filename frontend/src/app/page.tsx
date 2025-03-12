@@ -1,6 +1,6 @@
 "use client";
 
-import AuthCard from "@/components/auth-card";
+import AuthCard from "@/components/auth/auth-card";
 import { Badge } from "@/components/ui/badge";
 import ApiClient from "@/lib/axios";
 import { Check, X } from "lucide-react";

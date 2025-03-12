@@ -17,43 +17,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "../ui/form";
 
-const formSchema = z
-  .object({
-    name: z
-      .string()
-      .min(2, { message: "El nombre debe tener al menos 2 caracteres" })
-      .max(50, { message: "El nombre no puede tener más de 50 caracteres" })
-      .regex(/^[a-zA-Z\s]*$/, {
-        message: "El nombre solo puede contener letras y espacios",
-      }),
-    email: z
-      .string()
-      .email({ message: "Dirección de correo electrónico no válida" }),
-    password: z
-      .string()
-      .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
-    confirmPassword: z.string().min(8, {
-      message: "La confirmación de contraseña debe tener al menos 8 caracteres",
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Las contraseñas no coinciden",
-    path: ["confirmPassword"],
-  });
+const formSchema = z.object({
+  email: z
+    .string()
+    .email({ message: "Dirección de correo electrónico no válida" }),
+  password: z
+    .string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres" }),
+});
 
-export default function Signup() {
+export default function Login() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
@@ -61,7 +44,7 @@ export default function Signup() {
     setIsLoading(true);
     setError(undefined);
     const { data, error } = await ApiClient.request<AuthResponse>(
-      "/users/create",
+      "/users/login",
       {
         method: "post",
         data: values,
@@ -83,20 +66,6 @@ export default function Signup() {
         <div className="grid gap-4">
           <FormField
             control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nombre Completo</FormLabel>
-                <FormControl>
-                  <Input placeholder="Juan Perez" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -116,21 +85,7 @@ export default function Signup() {
               <FormItem>
                 <FormLabel>Contraseña</FormLabel>
                 <FormControl>
-                  <Input id="signup_password" type="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirmar Contraseña</FormLabel>
-                <FormControl>
-                  <Input id="confirmPassword" type="password" {...field} />
+                  <Input id="password" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -138,7 +93,7 @@ export default function Signup() {
           />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {error ? error : "Registrarse"}
+            {error ? error : "Iniciar Sesión"}
             {isLoading && <Loader className="animate-spin" />}
           </Button>
         </div>

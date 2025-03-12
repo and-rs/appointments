@@ -2,7 +2,7 @@ import { Appointment } from "@/lib/types";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Calendar, Clock } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 interface Props {
   result: { appointments: Appointment[] };

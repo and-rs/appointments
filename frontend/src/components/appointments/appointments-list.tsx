@@ -6,9 +6,9 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Calendar, ClipboardPlus, Clock, Trash } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { Card } from "./ui/card";
 import { KeyedMutator } from "swr";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
 
 interface Props {
   result: { appointments: Appointment[] };

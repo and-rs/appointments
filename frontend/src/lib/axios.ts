@@ -32,16 +32,13 @@ class ApiClient {
   }
 
   static async request<T>(url: string, config: RequestConfig = {}) {
-    const controller = new AbortController();
     try {
       const data = await this.fetch<T>(url, {
         ...config,
-        signal: controller.signal,
       });
       return {
         data,
         error: null,
-        abort: () => controller.abort(),
       };
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -51,7 +48,6 @@ class ApiClient {
             message: error.response?.data?.message || error.message,
             status: error.response?.status,
           },
-          abort: () => controller.abort(),
         };
       }
       return {
@@ -60,7 +56,6 @@ class ApiClient {
           message: "An unexpected error occurred",
           status: 500,
         },
-        abort: () => controller.abort(),
       };
     }
   }
