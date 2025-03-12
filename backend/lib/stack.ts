@@ -15,17 +15,39 @@ export class AppointmentsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
     const DB_NAME = "appointments";
+    const stackName = cdk.Stack.of(this).stackName;
 
-    const vpc = ec2.Vpc.fromLookup(this, "DefaultVpc", { isDefault: true });
-
-    const rdsSecurityGroup = new ec2.SecurityGroup(this, "RdsSecurityGroup", {
-      vpc,
-      description: "Security group for our PostgreSQL RDS instance",
-      allowAllOutbound: true,
+    const vpc = new ec2.Vpc(this, "Vpc", {
+      maxAzs: 2,
+      natGateways: 0,
+      subnetConfiguration: [
+        {
+          cidrMask: 24,
+          name: "application",
+          subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+        },
+      ],
     });
 
+    const rdsSecurityGroup = new ec2.SecurityGroup(this, "RdsSecurityGroup", {
+      securityGroupName: `${stackName}-rds-sg`,
+      description: "Security group for our PostgreSQL RDS instance",
+      vpc,
+    });
+
+    const lambdasSecurityGroup = new ec2.SecurityGroup(
+      this,
+      "LambdasSecurityGroup",
+      {
+        securityGroupName: `${stackName}-fn-sg`,
+        description: "Security group for our Lambdas",
+        allowAllOutbound: true,
+        vpc,
+      },
+    );
+
     const dbSecret = new secretsmanager.Secret(this, "DBSecret", {
-      secretName: "appointments-rds-credentials",
+      secretName: `${stackName}-rds-credentials`,
       generateSecretString: {
         secretStringTemplate: JSON.stringify({ username: "postgres" }),
         generateStringKey: "password",
@@ -33,18 +55,26 @@ export class AppointmentsStack extends cdk.Stack {
       },
     });
 
+    vpc.addInterfaceEndpoint("SecretsManagerEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.SECRETS_MANAGER,
+      subnets: {
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      },
+    });
+
     const dbInstance = new rds.DatabaseInstance(this, "RdsPostgresInstance", {
+      multiAz: false,
       engine: rds.DatabaseInstanceEngine.postgres({
         version: rds.PostgresEngineVersion.VER_17,
       }),
       vpc,
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-      },
+      vpcSubnets: vpc.selectSubnets({
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      }),
       securityGroups: [rdsSecurityGroup],
       credentials: rds.Credentials.fromSecret(dbSecret),
       instanceType: ec2.InstanceType.of(
-        ec2.InstanceClass.T4G,
+        ec2.InstanceClass.T3,
         ec2.InstanceSize.MICRO,
       ),
       backupRetention: cdk.Duration.days(0),
@@ -57,16 +87,21 @@ export class AppointmentsStack extends cdk.Stack {
     });
 
     rdsSecurityGroup.addIngressRule(
-      ec2.Peer.ipv4(vpc.vpcCidrBlock),
+      lambdasSecurityGroup,
       ec2.Port.tcp(5432),
-      "Allow connections from inside the VPC",
+      "Lambda to Postgres database",
     );
 
-    const fn = new NodejsFunction(this, "ApiFunction", {
+    const apiFn = new NodejsFunction(this, "ApiFunction", {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: "handler",
-      entry: path.join(__dirname, "../src/handler.ts"),
-      timeout: cdk.Duration.seconds(60),
+      entry: path.join(__dirname, "../src/lambda.ts"),
+      timeout: cdk.Duration.seconds(30),
+      vpc: vpc,
+      vpcSubnets: vpc.selectSubnets({
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      }),
+      securityGroups: [lambdasSecurityGroup],
       bundling: {
         minify: true,
         sourceMap: true,
@@ -82,10 +117,6 @@ export class AppointmentsStack extends cdk.Stack {
           },
         },
       },
-      vpc: vpc,
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-      },
       environment: {
         JWT_SECRET: dbSecret.secretArn,
         DB_HOST: dbInstance.dbInstanceEndpointAddress,
@@ -94,18 +125,12 @@ export class AppointmentsStack extends cdk.Stack {
         DB_NAME,
       },
     });
-    fn.addFunctionUrl({
-      authType: lambda.FunctionUrlAuthType.NONE,
-    });
+
     new apigw.LambdaRestApi(this, "ApiFunctionGateway", {
-      handler: fn,
+      handler: apiFn,
     });
-    dbSecret.grantRead(fn);
-    dbInstance.connections.allowFrom(
-      fn,
-      ec2.Port.tcp(5432),
-      "Allow Lambda to access PostgreSQL",
-    );
+
+    dbSecret.grantRead(apiFn);
 
     // lambda just to run migrations on deployment
     const migrationFn = new NodejsFunction(this, "MigrationFunction", {
@@ -113,9 +138,10 @@ export class AppointmentsStack extends cdk.Stack {
       entry: path.join(__dirname, "../migrations/handler.ts"),
       handler: "handler",
       vpc: vpc,
-      vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
-      },
+      vpcSubnets: vpc.selectSubnets({
+        subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+      }),
+      securityGroups: [lambdasSecurityGroup],
       timeout: cdk.Duration.minutes(1),
       bundling: {
         minify: true,
@@ -141,8 +167,8 @@ export class AppointmentsStack extends cdk.Stack {
         DB_SECRET_ARN: dbSecret.secretArn,
         DB_NAME,
       },
-      securityGroups: [rdsSecurityGroup],
     });
+
     // this is just to not repeat myself
     const triggers = {
       service: "Lambda",
@@ -155,6 +181,7 @@ export class AppointmentsStack extends cdk.Stack {
         Date.now().toString(),
       ),
     };
+
     const migrationTrigger = new customresources.AwsCustomResource(
       this,
       "MigrationTrigger",
@@ -169,12 +196,8 @@ export class AppointmentsStack extends cdk.Stack {
         ]),
       },
     );
+
     dbSecret.grantRead(migrationFn);
-    dbInstance.connections.allowFrom(
-      migrationFn,
-      ec2.Port.tcp(5432),
-      "Allow Migration Lambda to access PostgreSQL",
-    );
     migrationTrigger.node.addDependency(dbInstance);
   }
 }

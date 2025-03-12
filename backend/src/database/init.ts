@@ -28,6 +28,7 @@ class Database {
 
     try {
       const { url, ssl } = await getDatabaseConfig();
+      console.log("creds =>", url, ssl);
 
       this.instance = new Client({
         connectionString: url,
@@ -55,7 +56,11 @@ class Database {
 
   static async query<T = any>(sql: string, params?: any[]): Promise<T[]> {
     const client = await this.getInstance();
+    console.log("client => ", client);
+
     const result = await client.query(sql, params);
+    console.log("result of query => ", result);
+
     return result.rows;
   }
 }
