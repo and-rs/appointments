@@ -1,7 +1,7 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { Appointment } from "@/types";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 import { RequestHandler } from "express";
 
 export const createAppointment: RequestHandler = HandlerFactory.create<

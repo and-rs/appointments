@@ -1,6 +1,6 @@
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 import { RequestHandler } from "express";
 
 interface AuthorizedUser {

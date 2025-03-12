@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import Database from "@/database/init";
 import { AuthenticatedRequest } from "@/middleware/auth";
 import { User } from "@/types";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 
 export const updateUser: RequestHandler = HandlerFactory.create<
   { user: User },

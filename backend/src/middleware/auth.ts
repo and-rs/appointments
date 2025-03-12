@@ -1,6 +1,6 @@
 import { Request, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 
 export interface AuthenticatedRequest extends Request {
   user: {

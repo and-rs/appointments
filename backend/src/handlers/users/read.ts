@@ -1,7 +1,7 @@
 import { RequestHandler } from "express";
 import Database from "@/database/init";
 import { User } from "@/types";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 
 export const readUsers: RequestHandler = HandlerFactory.create<{
   users: User[];

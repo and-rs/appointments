@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { RequestHandler } from "express";
 import Database from "@/database/init";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 import { User } from "@/types";
 
 interface AuthResponse {

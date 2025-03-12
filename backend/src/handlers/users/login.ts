@@ -3,7 +3,7 @@ import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "@/types";
 import Database from "@/database/init";
-import HandlerFactory from "@/utils/handler-class";
+import HandlerFactory from "@/utils/handler-factory";
 
 export const login: RequestHandler = HandlerFactory.create<{ token: string }>(
   async (req) => {
