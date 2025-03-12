@@ -1,28 +1,26 @@
-import axios, { AxiosInstance, AxiosRequestConfig, Method } from "axios";
+import axios, { AxiosRequestConfig, Method } from "axios";
 interface RequestConfig extends AxiosRequestConfig {
   requiresAuth?: boolean;
   method?: Method;
 }
 
 class ApiClient {
-  private client: AxiosInstance;
-  constructor() {
-    this.client = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
+  private constructor() {}
+  private static _client = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  private getAuthHeader(): { Authorization?: string } {
+  private static getAuthHeader(): { Authorization?: string } {
     const token = localStorage.getItem("token");
     return token ? { Authorization: `Bearer ${token}` } : {};
   }
 
-  async fetch<T>(url: string, config: RequestConfig = {}): Promise<T> {
+  static async fetch<T>(url: string, config: RequestConfig = {}): Promise<T> {
     const { requiresAuth = false, method = "get", ...rest } = config;
-    const response = await this.client.request({
+    const response = await this._client.request({
       url,
       method,
       headers: {
@@ -33,7 +31,7 @@ class ApiClient {
     return response.data;
   }
 
-  async request<T>(url: string, config: RequestConfig = {}) {
+  static async request<T>(url: string, config: RequestConfig = {}) {
     const controller = new AbortController();
     try {
       const data = await this.fetch<T>(url, {
@@ -67,4 +65,5 @@ class ApiClient {
     }
   }
 }
-export const api = new ApiClient();
+
+export default ApiClient;

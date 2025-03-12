@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { api } from "@/lib/axios";
+import ApiClient from "@/lib/axios";
 import { AuthResponse, Doctor } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, X } from "lucide-react";
@@ -25,7 +25,9 @@ import useSWR from "swr";
 import * as z from "zod";
 
 export default function CreateAppointment() {
-  const { data } = useSWR("/doctors/read", (url) => api.fetch<Doctor[]>(url));
+  const { data } = useSWR("/doctors/read", (url) =>
+    ApiClient.fetch<Doctor[]>(url),
+  );
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -58,7 +60,7 @@ export default function CreateAppointment() {
       time: values.time,
     };
 
-    const { data, error } = await api.request<AuthResponse>(
+    const { data, error } = await ApiClient.request<AuthResponse>(
       "/appointments/create",
       { method: "post", data: appointment, requiresAuth: true },
     );

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { api } from "@/lib/axios";
+import ApiClient from "@/lib/axios";
 import { AuthResponse } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
@@ -60,10 +60,13 @@ export default function Signup() {
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     setError(undefined);
-    const { data, error } = await api.request<AuthResponse>("/users/create", {
-      method: "post",
-      data: values,
-    });
+    const { data, error } = await ApiClient.request<AuthResponse>(
+      "/users/create",
+      {
+        method: "post",
+        data: values,
+      },
+    );
     if (error) {
       setError(error.message);
     }

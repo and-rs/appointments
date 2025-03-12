@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/lib/axios";
+import ApiClient from "@/lib/axios";
 import { Appointment } from "@/lib/types";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -27,7 +27,7 @@ export default function AppointmentsList({ result, mutate }: Props) {
     setError(null);
     setSuccessMessage(null);
 
-    const { error } = await api.request<{ message: string }>(
+    const { error } = await ApiClient.request<{ message: string }>(
       `/appointments/delete/${appointmentId}`,
       {
         method: "delete",

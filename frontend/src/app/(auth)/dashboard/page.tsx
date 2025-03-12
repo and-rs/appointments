@@ -2,14 +2,14 @@
 
 import AppointmentsList from "@/components/appointments-list";
 import StatCard from "@/components/stat-card";
-import { api } from "@/lib/axios";
+import ApiClient from "@/lib/axios";
 import { Appointment } from "@/lib/types";
 import { Loader } from "lucide-react";
 import useSWR from "swr";
 
 export default function Dashboard() {
   const { data, mutate } = useSWR("/appointments/read", (url) =>
-    api.fetch<{ result: { appointments: Appointment[] } }>(url, {
+    ApiClient.fetch<{ result: { appointments: Appointment[] } }>(url, {
       requiresAuth: true,
     }),
   );

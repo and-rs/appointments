@@ -132,7 +132,7 @@ pnpm dev
 // Ejemplo de hook para citas
 function useAppointments() {
   const { data, error } = useSWR('/appointments/read',
-    url => api.fetch(url, { requiresAuth: true })
+    url => ApiClient.fetch(url, { requiresAuth: true })
   );
 
   return {

@@ -2,13 +2,13 @@
 
 import AuthCard from "@/components/auth-card";
 import { Badge } from "@/components/ui/badge";
-import { api } from "@/lib/axios";
+import ApiClient from "@/lib/axios";
 import { Check, X } from "lucide-react";
 import useSWR from "swr";
 
 export default function Home() {
   const { data, error, isLoading } = useSWR("/", (url: string) =>
-    api.fetch(url),
+    ApiClient.fetch(url),
   );
 
   return (

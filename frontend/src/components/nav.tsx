@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/lib/axios";
+import ApiClient from "@/lib/axios";
 import { AuthResponse } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Calendar, Loader2Icon, LogOut, Plus, User } from "lucide-react";
@@ -14,7 +14,7 @@ export default function Nav() {
   const router = useRouter();
 
   const { data, error, isLoading } = useSWR("/users/authorized", (url) =>
-    api.fetch<AuthResponse>(url, { requiresAuth: true }),
+    ApiClient.fetch<AuthResponse>(url, { requiresAuth: true }),
   );
 
   const navItems = [
