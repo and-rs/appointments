@@ -3,55 +3,47 @@ import { Client } from "pg";
 import { getDatabaseConfig } from "./config";
 
 class Database {
+  private static instancePromise: Promise<Client> | null = null;
   private static instance: Client | null = null;
-  private static isConnecting = false;
-
   private constructor() {}
 
-  static async getInstance(): Promise<Client> {
-    if (this.instance !== null) {
-      return this.instance;
-    }
-
-    if (this.isConnecting) {
-      return new Promise((resolve) => {
-        const checkConnection = setInterval(() => {
-          if (this.instance !== null) {
-            clearInterval(checkConnection);
-            resolve(this.instance);
-          }
-        }, 100);
-      });
-    }
-
-    this.isConnecting = true;
-
+  static async createInstance(): Promise<Client> {
     try {
       const { url, ssl } = await getDatabaseConfig();
-      console.log("creds =>", url, ssl);
 
-      this.instance = new Client({
+      const client = new Client({
         connectionString: url,
         ssl,
       });
 
-      await this.instance.connect();
-      console.log("Database connected =>");
+      await client.connect();
+      console.log("Database connected");
 
-      this.instance.on("error", (error) => {
-        console.error("Database connection error =>", error);
+      client.on("error", (error) => {
+        this.instancePromise = null;
         this.instance = null;
-        this.isConnecting = false;
+        console.error("Database error >", error);
       });
 
-      return this.instance;
+      this.instance = client;
     } catch (error) {
-      this.instance = null;
-      console.error("Database init error =>", error);
+      console.error("Database error >", error);
       throw error;
     } finally {
-      this.isConnecting = false;
+      this.instancePromise = null;
     }
+
+    return this.instance;
+  }
+
+  static async getInstance(): Promise<Client> {
+    if (this.instance) {
+      return this.instance;
+    }
+    if (!this.instancePromise) {
+      this.instancePromise = this.createInstance();
+    }
+    return await this.instancePromise;
   }
 
   static async query<T = any>(sql: string, params?: any[]): Promise<T[]> {
