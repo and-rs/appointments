@@ -134,7 +134,7 @@ export default function Signup() {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isLoading}>
             {error ? error : "Registrarse"}
             {isLoading && <Loader className="animate-spin" />}
           </Button>
